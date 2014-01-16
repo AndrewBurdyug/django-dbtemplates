@@ -68,6 +68,10 @@ if settings.DBTEMPLATES_USE_TINYMCE:
     from tinymce.widgets import AdminTinyMCE
     TemplateContentTextArea = AdminTinyMCE
 
+if settings.DBTEMPLATES_USE_CKEDITOR:
+    from ckeditor.widgets import CKEditorWidget
+    TemplateContentTextArea = CKEditorWidget
+
 
 class TemplateAdminForm(forms.ModelForm):
     """
@@ -152,5 +156,6 @@ class TemplateAdmin(TemplateModelAdmin):
     def site_list(self, template):
         return ", ".join([site.name for site in template.sites.all()])
     site_list.short_description = _('sites')
+
 
 admin.site.register(Template, TemplateAdmin)
