@@ -49,9 +49,9 @@ class CodeMirrorTextArea(forms.Textarea):
         return mark_safe(u"".join(result))
 
 if settings.DBTEMPLATES_USE_CODEMIRROR:
-    TemplateContentTextArea = CodeMirrorTextArea
+    TemplateContentTextArea = CodeMirrorTextArea()
 else:
-    TemplateContentTextArea = forms.Textarea
+    TemplateContentTextArea = forms.Textarea()
 
 if settings.DBTEMPLATES_AUTO_POPULATE_CONTENT:
     content_help_text = _("Leaving this empty causes Django to look for a "
@@ -66,11 +66,13 @@ if settings.DBTEMPLATES_USE_CODEMIRROR and settings.DBTEMPLATES_USE_TINYMCE:
 
 if settings.DBTEMPLATES_USE_TINYMCE:
     from tinymce.widgets import AdminTinyMCE
-    TemplateContentTextArea = AdminTinyMCE
+    TemplateContentTextArea = AdminTinyMCE()
 
 if settings.DBTEMPLATES_USE_CKEDITOR:
     from ckeditor.widgets import CKEditorWidget
-    TemplateContentTextArea = CKEditorWidget
+    widget = CKEditorWidget()
+    widget.config['entities'] = False
+    TemplateContentTextArea = widget
 
 
 class TemplateAdminForm(forms.ModelForm):
@@ -78,7 +80,7 @@ class TemplateAdminForm(forms.ModelForm):
     Custom AdminForm to make the content textarea wider.
     """
     content = forms.CharField(
-        widget=TemplateContentTextArea({'rows': '24'}),
+        widget=TemplateContentTextArea,
         help_text=content_help_text, required=False)
 
     class Meta:
